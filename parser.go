@@ -1,8 +1,13 @@
 package down
 
+import (
+	"regexp"
+)
+
 const (
 	EOF = -(iota + 1)
 	Text
+	HeaderOne
 )
 
 type scanner struct {
@@ -50,4 +55,12 @@ func (s scanner) End() bool {
 	}
 
 	return false
+}
+
+func identify(source string) int {
+	if source[0] == '#' && source[1] != '#' {
+		return HeaderOne
+	}
+
+	return Text
 }
