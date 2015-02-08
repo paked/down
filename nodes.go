@@ -4,12 +4,19 @@ import (
 	"fmt"
 )
 
-type Node interface {
+type Noder interface {
 	String() string
 }
 
+type Node struct {
+}
+
+func (n Node) String() string {
+	return ""
+}
+
 type LineNode struct {
-	Child Node
+	Child Noder
 }
 
 func (ln LineNode) String() string {
@@ -17,8 +24,8 @@ func (ln LineNode) String() string {
 }
 
 type CompositeStringNode struct {
-	Special Node
-	Child   Node
+	Special Noder
+	Child   Noder
 }
 
 func (csn CompositeStringNode) String() string {
