@@ -2,6 +2,7 @@ package down
 
 import (
 	"errors"
+	"fmt"
 )
 
 type Parser struct {
@@ -29,10 +30,6 @@ func (p Parser) End() bool {
 	return false
 }
 
-func (p Parser) parseItalics() Noder {
-	return ItalicNode{}
-}
-
 func (p Parser) parseBold() Noder {
 	return BoldStringNode{}
 }
@@ -41,11 +38,71 @@ func (p Parser) parseLink() Noder {
 	return LinkNode{}
 }
 
-func (p Parser) parseLine() Noder {
+func (p *Parser) parseLine() Noder {
+	line := LineNode{RawTextNode{"hey"}}
+	for !p.End() {
+		c := p.source[p.location]
+		switch c {
+		case uint8('#'):
+			line.Child = p.parseHeader()
+		default:
+			line.Child = p.parseComposite()
+		}
+
+		p.children = append(p.children, line)
+		p.Next()
+	}
 	return LineNode{}
+}
+
+func (p *Parser) parseComposite() CompositeStringNode {
+	var content string
+	composite := CompositeStringNode{}
+	for !p.End() {
+		c := p.source[p.location]
+		if c == uint8(10) {
+			break
+		}
+
+		content += string(p.source[p.location])
+		p.Next()
+	}
+
+	composite.AddChild(RawTextNode{Content: content})
+	return composite
+}
+
+func (p *Parser) parseHeader() HeaderOneNode {
+	text := RawTextNode{}
+
+	for !p.End() {
+		if p.source[p.location] == uint8(10) {
+			break
+		}
+
+		if p.source[p.location] == uint8('#') {
+			p.Next()
+			continue
+		}
+
+		text.Content += string(p.source[p.location])
+		p.Next()
+	}
+
+	return HeaderOneNode{Child: text}
+}
+
+func (p *Parser) Parse(source string) {
+	fmt.Println("Parsing string..")
+	p.source = source + "\n"
+	p.parseLine()
 }
 
 func (p *Parser) String() string {
 	// Parse into line
-	return p.parseLine().String()
+	var content string
+	for _, node := range p.children {
+		content += node.String()
+	}
+	return content
 }

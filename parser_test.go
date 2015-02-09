@@ -7,6 +7,7 @@ import (
 
 func TestParse(t *testing.T) {
 	p := Parser{}
-	p.source = "#Hello \nmy *name* is *harrison*"
-	fmt.Println(p.source)
+	source := "#Hello \nmy *name* is *harrison*"
+	p.Parse(source)
+	fmt.Println(p.String())
 }
