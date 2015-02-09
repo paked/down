@@ -7,7 +7,7 @@
 //
 // Grammar:
 // 		line 				::= <composite_string> | <header> | <list>
-//		composite_string 	::= (<link> | <bold> | <italics> | <raw_string> )? <composite_string>
+//		composite_string 	::= (<link> | <bold> | <italics> | <raw_string> )+
 // 		raw_string 			::= \s+
 // 		link 				::= "[" <raw_string> "](" <raw_string> ")"
 //		bold 				::= "*"<composite_string>"*"

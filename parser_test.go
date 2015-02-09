@@ -6,5 +6,7 @@ import (
 )
 
 func TestParse(t *testing.T) {
-	fmt.Println(LineNode{Child: BoldStringNode{CompositeStringNode{RawTextNode{"Oh yes"}, Node{}}}})
+	p := Parser{}
+	p.source = "#Hello \nmy *name* is *harrison*"
+	fmt.Println(p.source)
 }

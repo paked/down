@@ -20,16 +20,24 @@ type LineNode struct {
 }
 
 func (ln LineNode) String() string {
-	return ln.Child.String()
+	return ln.Child.String() + "\n"
 }
 
 type CompositeStringNode struct {
-	Special Noder
-	Child   Noder
+	children []Noder
 }
 
 func (csn CompositeStringNode) String() string {
-	return "<p>" + csn.Special.String() + csn.Child.String() + "</p>"
+	var content string
+	for _, node := range csn.children {
+		content += node.String()
+	}
+
+	return fmt.Sprintf("<p>%v</p>", content)
+}
+
+func (csn *CompositeStringNode) AddChild(n Noder) {
+	csn.children = append(csn.children, n)
 }
 
 type RawTextNode struct {
@@ -63,4 +71,12 @@ type ItalicNode struct {
 
 func (in ItalicNode) String() string {
 	return "<i>" + in.Child.String() + "</i>"
+}
+
+type HeaderOneNode struct {
+	Child RawTextNode
+}
+
+func (hon HeaderOneNode) String() string {
+	return fmt.Sprintf("<h1>%v</h1>", hon.Child.String())
 }
