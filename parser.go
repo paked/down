@@ -30,6 +30,10 @@ func (p Parser) End() bool {
 	return false
 }
 
+func (p Parser) Back() {
+	p.location -= 1
+}
+
 func (p Parser) parseBold() Noder {
 	return BoldStringNode{}
 }
@@ -55,12 +59,11 @@ func (p *Parser) parseLine() Noder {
 	return LineNode{}
 }
 
-func (p *Parser) parseComposite() CompositeStringNode {
+func (p *Parser) parseRaw() RawTextNode {
 	var content string
-	composite := CompositeStringNode{}
+
 	for !p.End() {
-		c := p.source[p.location]
-		if c == uint8(10) {
+		if p.source[p.location] == uint8(10) {
 			break
 		}
 
@@ -68,7 +71,26 @@ func (p *Parser) parseComposite() CompositeStringNode {
 		p.Next()
 	}
 
-	composite.AddChild(RawTextNode{Content: content})
+	return RawTextNode{Content: content}
+}
+
+func (p *Parser) parseComposite() CompositeStringNode {
+	composite := CompositeStringNode{}
+	for !p.End() {
+		c := p.source[p.location]
+		if c == uint8(10) {
+			break
+		}
+
+		switch c {
+		default:
+			composite.AddChild(p.parseRaw())
+		}
+
+		p.Next()
+	}
+
+	// composite.AddChild(RawTextNode{Content: content})
 	return composite
 }
 
@@ -94,12 +116,11 @@ func (p *Parser) parseHeader() HeaderOneNode {
 
 func (p *Parser) Parse(source string) {
 	fmt.Println("Parsing string..")
-	p.source = source + "\n"
+	p.source = source + "\n\n"
 	p.parseLine()
 }
 
 func (p *Parser) String() string {
-	// Parse into line
 	var content string
 	for _, node := range p.children {
 		content += node.String()
