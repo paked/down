@@ -67,11 +67,37 @@ func (p *Parser) parseRaw() RawTextNode {
 			break
 		}
 
+		if p.source[p.location] == uint8('*') {
+			p.location -= 1
+			break
+		}
+
 		content += string(p.source[p.location])
 		p.Next()
 	}
 
 	return RawTextNode{Content: content}
+}
+
+func (p *Parser) parseItalics() ItalicNode {
+	var content string
+	node := ItalicNode{}
+	for !p.End() {
+		c := p.source[p.location]
+		if c == uint8(10) {
+			break
+		}
+
+		if c == uint8('*') {
+			node.Child.AddChild(RawTextNode{Content: content})
+			return node
+		}
+
+		content += string(c)
+		p.Next()
+	}
+
+	return ItalicNode{}
 }
 
 func (p *Parser) parseComposite() CompositeStringNode {
@@ -83,6 +109,9 @@ func (p *Parser) parseComposite() CompositeStringNode {
 		}
 
 		switch c {
+		case uint8('*'):
+			p.Next()
+			composite.AddChild(p.parseItalics())
 		default:
 			composite.AddChild(p.parseRaw())
 		}
