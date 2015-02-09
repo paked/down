@@ -50,7 +50,7 @@ func (p *Parser) parseLine() Noder {
 		case uint8('#'):
 			line.Child = p.parseHeader()
 		default:
-			line.Child = p.parseComposite()
+			line.Child = ParagraphNode{Child: p.parseComposite()}
 		}
 
 		p.children = append(p.children, line)
@@ -145,7 +145,7 @@ func (p *Parser) parseHeader() HeaderOneNode {
 
 func (p *Parser) Parse(source string) {
 	fmt.Println("Parsing string..")
-	p.source = source + "\n\n"
+	p.source = source + "\n"
 	p.parseLine()
 }
 

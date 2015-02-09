@@ -33,7 +33,7 @@ func (csn CompositeStringNode) String() string {
 		content += node.String()
 	}
 
-	return fmt.Sprintf("<p>%v</p>", content)
+	return content
 }
 
 func (csn *CompositeStringNode) AddChild(n Noder) {
@@ -79,4 +79,12 @@ type HeaderOneNode struct {
 
 func (hon HeaderOneNode) String() string {
 	return fmt.Sprintf("<h1>%v</h1>", hon.Child.String())
+}
+
+type ParagraphNode struct {
+	Child CompositeStringNode
+}
+
+func (pn ParagraphNode) String() string {
+	return fmt.Sprintf("<p>%v</p>", pn.Child.String())
 }

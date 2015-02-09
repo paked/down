@@ -6,7 +6,8 @@
 // - Figure out some sort of procedure
 //
 // Grammar:
-// 		line 				::= <composite_string> | <header> | <list>
+// 		line 				::= <paragraph> | <header> | <list>
+//		paragraph 			::= <composite_string>
 //		composite_string 	::= (<link> | <bold> | <italics> | <raw_string> )+
 // 		raw_string 			::= \s+
 // 		link 				::= "[" <raw_string> "](" <raw_string> ")"
