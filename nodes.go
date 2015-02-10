@@ -8,8 +8,7 @@ type Noder interface {
 	String() string
 }
 
-type Node struct {
-}
+type Node struct{}
 
 func (n Node) String() string {
 	return ""

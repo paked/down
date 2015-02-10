@@ -24,7 +24,7 @@ func (p *Parser) Next() {
 }
 
 func (p Parser) End() bool {
-	if p.location == len(p.source) {
+	if p.location >= len(p.source) {
 		return true
 	}
 	return false
@@ -43,7 +43,7 @@ func (p Parser) parseLink() Noder {
 }
 
 func (p *Parser) parseLine() Noder {
-	line := LineNode{RawTextNode{"hey"}}
+	line := LineNode{RawTextNode{""}}
 	for !p.End() {
 		c := p.source[p.location]
 		switch c {
@@ -63,11 +63,12 @@ func (p *Parser) parseRaw() RawTextNode {
 	var content string
 
 	for !p.End() {
-		if p.source[p.location] == uint8(10) {
+		c := p.source[p.location]
+		if c == uint8(10) {
 			break
 		}
 
-		if p.source[p.location] == uint8('*') {
+		if c == uint8('*') {
 			p.location -= 1
 			break
 		}
@@ -79,7 +80,7 @@ func (p *Parser) parseRaw() RawTextNode {
 	return RawTextNode{Content: content}
 }
 
-func (p *Parser) parseItalics() ItalicNode {
+func (p *Parser) parseItalics() Noder {
 	var content string
 	node := ItalicNode{}
 	for !p.End() {
@@ -96,8 +97,8 @@ func (p *Parser) parseItalics() ItalicNode {
 		content += string(c)
 		p.Next()
 	}
-
-	return ItalicNode{}
+	p.location -= 1
+	return RawTextNode{"*" + content}
 }
 
 func (p *Parser) parseComposite() CompositeStringNode {
@@ -118,8 +119,6 @@ func (p *Parser) parseComposite() CompositeStringNode {
 
 		p.Next()
 	}
-
-	// composite.AddChild(RawTextNode{Content: content})
 	return composite
 }
 
@@ -144,7 +143,7 @@ func (p *Parser) parseHeader() HeaderOneNode {
 }
 
 func (p *Parser) Parse(source string) {
-	fmt.Println("Parsing string..")
+	fmt.Printf("Parsing string:\n`%v`\n", source)
 	p.source = source + "\n"
 	p.parseLine()
 }
