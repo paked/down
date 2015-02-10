@@ -53,7 +53,7 @@ type LinkNode struct {
 }
 
 func (ln LinkNode) String() string {
-	return fmt.Sprintf("<a href='%v'>%v</a>", ln.Text.String(), ln.Addr.String())
+	return fmt.Sprintf("<a href='%v'>%v</a>", ln.Addr.String(), ln.Text.String())
 }
 
 type BoldStringNode struct {

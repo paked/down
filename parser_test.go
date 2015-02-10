@@ -14,7 +14,7 @@ func TestParse(t *testing.T) {
 
 func TestParseLink(t *testing.T) {
 	p := Parser{}
-	source := "#Hello\nthis is a link [Hello](it's a game)"
+	source := "#Hello\nthis is a link [Go to google!](http://google.com)"
 	p.Parse(source)
 	fmt.Println(p.String())
 }
