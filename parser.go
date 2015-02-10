@@ -38,10 +38,6 @@ func (p Parser) parseBold() Noder {
 	return BoldStringNode{}
 }
 
-func (p Parser) parseLink() Noder {
-	return LinkNode{}
-}
-
 func (p *Parser) parseLine() Noder {
 	line := LineNode{RawTextNode{""}}
 	for !p.End() {
@@ -68,7 +64,7 @@ func (p *Parser) parseRaw() RawTextNode {
 			break
 		}
 
-		if c == uint8('*') {
+		if c == uint8('*') || c == uint8('[') {
 			p.location -= 1
 			break
 		}
@@ -113,6 +109,9 @@ func (p *Parser) parseComposite() CompositeStringNode {
 		case uint8('*'):
 			p.Next()
 			composite.AddChild(p.parseItalics())
+		case uint8('['):
+			p.Next()
+			composite.AddChild(p.parseLink())
 		default:
 			composite.AddChild(p.parseRaw())
 		}
@@ -120,6 +119,29 @@ func (p *Parser) parseComposite() CompositeStringNode {
 		p.Next()
 	}
 	return composite
+}
+
+func (p *Parser) parseLink() Noder {
+	link := LinkNode{}
+	var place string
+	for !p.End() {
+		c := p.source[p.location]
+		switch c {
+		case ']':
+			link.Text = RawTextNode{place}
+		case '(':
+			place = ""
+			p.Next()
+			continue
+		case ')':
+			link.Addr = RawTextNode{place}
+			return link
+		}
+
+		place += string(c)
+		p.Next()
+	}
+	return RawTextNode{Content: place}
 }
 
 func (p *Parser) parseHeader() HeaderOneNode {
