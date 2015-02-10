@@ -49,11 +49,11 @@ func (rtn RawTextNode) String() string {
 
 type LinkNode struct {
 	Text RawTextNode
-	Link RawTextNode
+	Addr RawTextNode
 }
 
 func (ln LinkNode) String() string {
-	return fmt.Sprintf("<a href='%v'>%v</a>", ln.Text.String(), ln.Link.String())
+	return fmt.Sprintf("<a href='%v'>%v</a>", ln.Text.String(), ln.Addr.String())
 }
 
 type BoldStringNode struct {
