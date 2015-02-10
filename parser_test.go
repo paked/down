@@ -18,3 +18,11 @@ func TestParseLink(t *testing.T) {
 	p.Parse(source)
 	fmt.Println(p.String())
 }
+
+func TestParseBold(t *testing.T) {
+	p := Parser{}
+	source := "**hello** *hey how are you* how are you"
+	p.Parse(source)
+	fmt.Println(p.String())
+	fmt.Println(p)
+}

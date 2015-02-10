@@ -34,10 +34,6 @@ func (p Parser) Back() {
 	p.location -= 1
 }
 
-func (p Parser) parseBold() Noder {
-	return BoldStringNode{}
-}
-
 func (p *Parser) parseLine() Noder {
 	line := LineNode{RawTextNode{""}}
 	for !p.End() {
@@ -93,8 +89,45 @@ func (p *Parser) parseItalics() Noder {
 		content += string(c)
 		p.Next()
 	}
+
 	p.location -= 1
 	return RawTextNode{"*" + content}
+}
+
+func (p *Parser) parseBold() Noder {
+	var content string
+	node := BoldStringNode{}
+
+	for !p.End() {
+		c := p.source[p.location]
+
+		if c == uint8(10) {
+			break
+		}
+
+		if c == uint8('*') {
+			peek, _ := p.Peek()
+			p.Next()
+			if peek != c {
+				fmt.Println(string(peek), "is not ", string(c))
+				p.Next()
+				continue
+			}
+			p.Next()
+			fmt.Println(string(peek), "is", string(c))
+
+			fmt.Println(p.source[:p.location])
+			node.Child.AddChild(RawTextNode{Content: content})
+			return node
+		} else {
+			content += string(c)
+		}
+
+		p.Next()
+	}
+
+	// p.location -= 1
+	return RawTextNode{"**" + content}
 }
 
 func (p *Parser) parseComposite() CompositeStringNode {
@@ -107,13 +140,24 @@ func (p *Parser) parseComposite() CompositeStringNode {
 
 		switch c {
 		case uint8('*'):
+			peek, _ := p.Peek()
 			p.Next()
+			if peek == c {
+				p.Next()
+				composite.AddChild(p.parseBold())
+				continue
+			}
+
 			composite.AddChild(p.parseItalics())
 		case uint8('['):
 			p.Next()
 			composite.AddChild(p.parseLink())
 		default:
 			composite.AddChild(p.parseRaw())
+		}
+
+		if c == uint8(']') || c == uint8(')') {
+			break
 		}
 
 		p.Next()
@@ -124,6 +168,7 @@ func (p *Parser) parseComposite() CompositeStringNode {
 func (p *Parser) parseLink() Noder {
 	link := LinkNode{}
 	var place string
+
 	for !p.End() {
 		c := p.source[p.location]
 		switch c {
@@ -141,6 +186,7 @@ func (p *Parser) parseLink() Noder {
 		place += string(c)
 		p.Next()
 	}
+
 	return RawTextNode{Content: place}
 }
 

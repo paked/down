@@ -48,8 +48,8 @@ func (rtn RawTextNode) String() string {
 }
 
 type LinkNode struct {
-	Text RawTextNode
-	Addr RawTextNode
+	Text Noder
+	Addr Noder
 }
 
 func (ln LinkNode) String() string {
