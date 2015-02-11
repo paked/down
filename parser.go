@@ -97,7 +97,13 @@ func (p *Parser) parseItalics() Noder {
 func (p *Parser) parseBold() Noder {
 	var content string
 	node := BoldStringNode{}
+	if p.source[p.location] != uint8('*') {
+		p.Back()
+	} else {
+		p.Next()
+	}
 
+	fmt.Println(string(p.source[p.location-1]), string(p.source[p.location]), "<-COMPARISON")
 	for !p.End() {
 		c := p.source[p.location]
 
@@ -109,14 +115,16 @@ func (p *Parser) parseBold() Noder {
 			peek, _ := p.Peek()
 			p.Next()
 			if peek != c {
-				fmt.Println(string(peek), "is not ", string(c))
-				p.Next()
+				// fmt.Println(string(peek), "is not ", string(c))
+				node.Child.AddChild(RawTextNode{Content: content})
+				node.Child.AddChild(p.parseItalics())
+				content = ""
 				continue
 			}
 			p.Next()
 			fmt.Println(string(peek), "is", string(c))
 
-			fmt.Println(p.source[:p.location])
+			// fmt.Println(p.source[:p.location])
 			node.Child.AddChild(RawTextNode{Content: content})
 			return node
 		} else {
