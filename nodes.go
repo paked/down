@@ -16,6 +16,24 @@ func (n Node) String() string {
 	return ""
 }
 
+// GroupNode is a Node Primitive for nodes that contain n amounts of children.
+type GroupNode struct {
+	children []Noder
+}
+
+func (gn GroupNode) Content() string {
+	var content string
+	for _, n := range gn.children {
+		content += n.String()
+	}
+	return content
+}
+
+// Add a node to a composite Node
+func (gn *GroupNode) AddChild(n Noder) {
+	gn.children = append(gn.children, n)
+}
+
 // LineNode describes a line of markdown.
 type LineNode struct {
 	Child Noder
@@ -28,21 +46,11 @@ func (ln LineNode) String() string {
 // CompositeStringNode describes a string which can contain any number of RawTextNodes, ItalicNodes,
 // BoldNodes and LinkNodes.
 type CompositeStringNode struct {
-	children []Noder
+	GroupNode
 }
 
 func (csn CompositeStringNode) String() string {
-	var content string
-	for _, node := range csn.children {
-		content += node.String()
-	}
-
-	return content
-}
-
-// Add a node to a composite Node
-func (csn *CompositeStringNode) AddChild(n Noder) {
-	csn.children = append(csn.children, n)
+	return csn.Content()
 }
 
 // RawTextNode is a node that represents bare text.
@@ -102,15 +110,10 @@ func (pn ParagraphNode) String() string {
 	return fmt.Sprintf("<p>%v</p>", pn.Child.String())
 }
 
-type ListNode struct {
-	CompositeStringNode
+type UnorderedListNode struct {
+	GroupNode
 }
 
-func (ln ListNode) String() string {
-	var content string
-	for _, c := range ln.children {
-		content += c.String()
-	}
-
-	return content
+func (uln UnorderedListNode) String() string {
+	return fmt.Sprintf("<ul>%v</ul>", uln.Content())
 }
