@@ -198,8 +198,9 @@ func (p *Parser) parseLink() Noder {
 	return RawTextNode{Content: place}
 }
 
-func (p *Parser) parseHeader() HeaderOneNode {
+func (p *Parser) parseHeader() HeaderNode {
 	text := RawTextNode{}
+	var count int
 
 	for !p.End() {
 		if p.source[p.location] == uint8(10) {
@@ -208,6 +209,7 @@ func (p *Parser) parseHeader() HeaderOneNode {
 
 		if p.source[p.location] == uint8('#') {
 			p.Next()
+			count += 1
 			continue
 		}
 
@@ -215,7 +217,7 @@ func (p *Parser) parseHeader() HeaderOneNode {
 		p.Next()
 	}
 
-	return HeaderOneNode{Child: text}
+	return HeaderNode{Child: text, Level: count}
 }
 
 func (p *Parser) Parse(source string) {

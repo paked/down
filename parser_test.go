@@ -32,3 +32,10 @@ func TestHeaderNode(t *testing.T) {
 	h.Level = 1
 	fmt.Println(h.String())
 }
+
+func TestParseHeader(t *testing.T) {
+	p := Parser{}
+	source := "#Hello\n##Hello"
+	p.Parse(source)
+	fmt.Println(p.String())
+}
