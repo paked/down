@@ -101,7 +101,7 @@ func (hn HeaderNode) String() string {
 	// return fmt.Sprintf("%[2] %[1]", ln., 22)
 }
 
-// ParahraphNode is a node to represent a paragraph of raw, links, bold and italic text.
+// ParagraphNode is a node to represent a paragraph of raw, links, bold and italic text.
 type ParagraphNode struct {
 	Child CompositeStringNode
 }
@@ -110,6 +110,7 @@ func (pn ParagraphNode) String() string {
 	return fmt.Sprintf("<p>%v</p>", pn.Child.String())
 }
 
+// UnorderedListNode is a node to represent a html unordered list element
 type UnorderedListNode struct {
 	GroupNode
 }
@@ -118,6 +119,8 @@ func (uln UnorderedListNode) String() string {
 	return fmt.Sprintf("<ul>%v</ul>", uln.Content())
 }
 
+// UnorderedListItemNode is a node to represent a list element node, which is inside an
+// unordered list.
 type UnorderedListItemNode struct {
 	Child Noder
 }

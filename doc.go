@@ -1,11 +1,7 @@
-// Package down is a markdown engine for in Go.
+// Package down implements a markup engine in Go, using a subset of Markdown as it's syntax.
 // It is currently in development, which would explain why it doesn't work.
 //
-// Heres a few random thoughts for me to keep track of.
-// - Rewrite all this to be more state machinish
-// - Figure out some sort of procedure
-//
-// Basic Grammar:
+// Grammar:
 // 		line 				::= <paragraph> | <header> | <list>
 //		paragraph 			::= <composite_string>
 //		composite_string 	::= (<link> | <bold> | <italics> | <raw_string> )+
