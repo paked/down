@@ -20,7 +20,7 @@ func (p Parser) Peek() (uint8, error) {
 }
 
 func (p *Parser) Next() {
-	p.location += 1
+	p.location++
 }
 
 func (p Parser) End() bool {
@@ -31,7 +31,7 @@ func (p Parser) End() bool {
 }
 
 func (p Parser) Back() {
-	p.location -= 1
+	p.location--
 }
 
 func (p *Parser) parseLine() Noder {
@@ -88,7 +88,7 @@ func (p *Parser) parseRaw() RawTextNode {
 		}
 
 		if c == uint8('*') || c == uint8('[') || c == uint8('-') {
-			p.location -= 1
+			p.Back()
 			break
 		}
 
@@ -117,7 +117,7 @@ func (p *Parser) parseItalics() Noder {
 		p.Next()
 	}
 
-	p.location -= 1
+	p.Back()
 	return RawTextNode{"*" + content}
 }
 
@@ -151,14 +151,13 @@ func (p *Parser) parseBold() Noder {
 
 			node.Child.AddChild(RawTextNode{Content: content})
 			return node
-		} else {
-			content += string(c)
 		}
+
+		content += string(c)
 
 		p.Next()
 	}
 
-	// p.location -= 1
 	return RawTextNode{"**" + content}
 }
 
@@ -234,7 +233,7 @@ func (p *Parser) parseHeader() HeaderNode {
 
 		if p.source[p.location] == uint8('#') {
 			p.Next()
-			count += 1
+			count++
 			continue
 		}
 
