@@ -117,3 +117,11 @@ type UnorderedListNode struct {
 func (uln UnorderedListNode) String() string {
 	return fmt.Sprintf("<ul>%v</ul>", uln.Content())
 }
+
+type UnorderedListItemNode struct {
+	Child Noder
+}
+
+func (ulin UnorderedListItemNode) String() string {
+	return fmt.Sprintf("<li>%v</li>", ulin.Child.String())
+}
