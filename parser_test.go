@@ -39,3 +39,10 @@ func TestParseHeader(t *testing.T) {
 	p.Parse(source)
 	fmt.Println(p.String())
 }
+
+func TestParseList(t *testing.T) {
+	p := Parser{}
+	source := "- Hello\n- I win"
+	p.Parse(source)
+	fmt.Println(p.String())
+}

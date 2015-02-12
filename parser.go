@@ -41,6 +41,8 @@ func (p *Parser) parseLine() Noder {
 		switch c {
 		case uint8('#'):
 			line.Child = p.parseHeader()
+		case uint8('-'):
+			line.Child = p.parseList()
 		default:
 			line.Child = ParagraphNode{Child: p.parseComposite()}
 		}
@@ -49,6 +51,31 @@ func (p *Parser) parseLine() Noder {
 		p.Next()
 	}
 	return LineNode{}
+}
+
+func (p *Parser) parseList() Noder {
+	list := UnorderedListNode{}
+	for !p.End() {
+		c := p.source[p.location]
+
+		if c != uint8('-') {
+			fmt.Println(string(c))
+			return list
+		}
+		fmt.Println("Adding child to list.")
+		list.AddChild(UnorderedListItemNode{p.parseListItem()})
+		p.Next()
+	}
+
+	return list
+}
+
+func (p *Parser) parseListItem() Noder {
+	// if p.source[p.location] != uint8('-') {
+	// 	return p.parseComposite()
+	// }
+	// p.Next()
+	return p.parseComposite()
 }
 
 func (p *Parser) parseRaw() RawTextNode {
@@ -164,7 +191,7 @@ func (p *Parser) parseComposite() CompositeStringNode {
 			composite.AddChild(p.parseRaw())
 		}
 
-		if c == uint8(']') || c == uint8(')') {
+		if c == uint8(']') || c == uint8(')') || c == uint8('-') {
 			break
 		}
 
