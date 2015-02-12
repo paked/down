@@ -59,10 +59,10 @@ func (p *Parser) parseList() Noder {
 		c := p.source[p.location]
 
 		if c != uint8('-') {
-			fmt.Println(string(c))
 			return list
 		}
-		fmt.Println("Adding child to list.")
+
+		p.Next()
 		list.AddChild(UnorderedListItemNode{p.parseListItem()})
 		p.Next()
 	}
@@ -71,10 +71,10 @@ func (p *Parser) parseList() Noder {
 }
 
 func (p *Parser) parseListItem() Noder {
-	// if p.source[p.location] != uint8('-') {
-	// 	return p.parseComposite()
-	// }
-	// p.Next()
+	if c := p.source[p.location]; c != uint8('-') && c != uint8(' ') {
+		return p.parseComposite()
+	}
+	p.Next()
 	return p.parseComposite()
 }
 
@@ -87,7 +87,7 @@ func (p *Parser) parseRaw() RawTextNode {
 			break
 		}
 
-		if c == uint8('*') || c == uint8('[') {
+		if c == uint8('*') || c == uint8('[') || c == uint8('-') {
 			p.location -= 1
 			break
 		}
@@ -130,7 +130,6 @@ func (p *Parser) parseBold() Noder {
 		p.Next()
 	}
 
-	fmt.Println(string(p.source[p.location-1]), string(p.source[p.location]), "<-COMPARISON")
 	for !p.End() {
 		c := p.source[p.location]
 
@@ -142,7 +141,6 @@ func (p *Parser) parseBold() Noder {
 			peek, _ := p.Peek()
 			p.Next()
 			if peek != c {
-				// fmt.Println(string(peek), "is not ", string(c))
 				node.Child.AddChild(RawTextNode{Content: content})
 				node.Child.AddChild(p.parseItalics())
 				content = ""
@@ -151,7 +149,6 @@ func (p *Parser) parseBold() Noder {
 			p.Next()
 			fmt.Println(string(peek), "is", string(c))
 
-			// fmt.Println(p.source[:p.location])
 			node.Child.AddChild(RawTextNode{Content: content})
 			return node
 		} else {
@@ -167,6 +164,7 @@ func (p *Parser) parseBold() Noder {
 
 func (p *Parser) parseComposite() CompositeStringNode {
 	composite := CompositeStringNode{}
+
 	for !p.End() {
 		c := p.source[p.location]
 		if c == uint8(10) {

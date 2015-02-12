@@ -16,7 +16,7 @@ func TestParseLink(t *testing.T) {
 	p := Parser{}
 	source := "#Hello\nthis is a link [Go to google!](http://google.com)"
 	p.Parse(source)
-	// fmt.Println(p.String())
+	fmt.Println(p.String())
 }
 
 func TestParseBold(t *testing.T) {
@@ -24,7 +24,6 @@ func TestParseBold(t *testing.T) {
 	source := "**hello** ***hey how are you* how are you**"
 	p.Parse(source)
 	fmt.Println(p.String())
-	// fmt.Println(p)
 }
 
 func TestHeaderNode(t *testing.T) {
@@ -42,7 +41,7 @@ func TestParseHeader(t *testing.T) {
 
 func TestParseList(t *testing.T) {
 	p := Parser{}
-	source := "- Hello\n- I win"
+	source := "- I win\n- Hello"
 	p.Parse(source)
 	fmt.Println(p.String())
 }
