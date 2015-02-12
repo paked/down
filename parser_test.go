@@ -26,3 +26,9 @@ func TestParseBold(t *testing.T) {
 	fmt.Println(p.String())
 	// fmt.Println(p)
 }
+
+func TestHeaderNode(t *testing.T) {
+	h := HeaderNode{}
+	h.Level = 1
+	fmt.Println(h.String())
+}

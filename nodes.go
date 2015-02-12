@@ -80,6 +80,16 @@ func (hon HeaderOneNode) String() string {
 	return fmt.Sprintf("<h1>%v</h1>", hon.Child.String())
 }
 
+type HeaderNode struct {
+	Child RawTextNode
+	Level int
+}
+
+func (hn HeaderNode) String() string {
+	return fmt.Sprintf("<h%[1]v>%[2]v</h%[1]v>", hn.Level, hn.Child.String())
+	// return fmt.Sprintf("%[2] %[1]", ln., 22)
+}
+
 type ParagraphNode struct {
 	Child CompositeStringNode
 }
