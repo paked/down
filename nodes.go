@@ -26,7 +26,7 @@ func (ln LineNode) String() string {
 }
 
 // CompositeStringNode describes a string which can contain any number of RawTextNodes, ItalicNodes,
-// BoldNodes and LinkNodes. 
+// BoldNodes and LinkNodes.
 type CompositeStringNode struct {
 	children []Noder
 }
@@ -100,4 +100,17 @@ type ParagraphNode struct {
 
 func (pn ParagraphNode) String() string {
 	return fmt.Sprintf("<p>%v</p>", pn.Child.String())
+}
+
+type ListNode struct {
+	CompositeStringNode
+}
+
+func (ln ListNode) String() string {
+	var content string
+	for _, c := range ln.children {
+		content += c.String()
+	}
+
+	return content
 }
