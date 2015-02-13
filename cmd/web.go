@@ -58,7 +58,15 @@ func (c Content) C() string {
 }
 
 func getEditorHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, string(homePage))
+	fmt.Fprint(w, `<html>
+	<body> 
+		<form action="/new_content" method="POST">
+			<textarea name="content" id="content" cols="30" rows="10"></textarea>
+			<br>
+			<input type="submit" />
+		</form>
+	</body>
+</html>`)
 }
 
 func postRegisterContentHandler(w http.ResponseWriter, r *http.Request) {
