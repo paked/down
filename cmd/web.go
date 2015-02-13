@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -26,11 +27,20 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	url := os.Getenv("DOWN_MONGODB_URL")
+	if url == "" {
+		url = "localhost"
+	}
+	fmt.Println("DB url is: ", url)
+
+	err = models.Init(url, "downbase")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
-	models.Init("localhost", "downline")
-
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", getEditorHandler).Methods("GET")
