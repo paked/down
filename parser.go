@@ -5,6 +5,12 @@ import (
 	"fmt"
 )
 
+func Parse(s string) string {
+	p := Parser{}
+	p.Parse(s)
+	return p.String()
+}
+
 type Parser struct {
 	source   string
 	location int
