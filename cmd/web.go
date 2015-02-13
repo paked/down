@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"time"
@@ -12,8 +13,19 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+var (
+	homePage []byte
+)
+
 func init() {
+	var err error
+
 	rand.Seed(time.Now().UnixNano())
+
+	homePage, err = ioutil.ReadFile("templates/home.html")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
@@ -46,7 +58,7 @@ func (c Content) C() string {
 }
 
 func getEditorHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, `<html><body> <form action="/new_content" method="POST"><textarea name="content" id="content" cols="30" rows="10"></textarea><input type="submit" /></form></body></html>`)
+	fmt.Fprint(w, string(homePage))
 }
 
 func postRegisterContentHandler(w http.ResponseWriter, r *http.Request) {
