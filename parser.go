@@ -59,12 +59,12 @@ func (p *Parser) parseList() Noder {
 		c := p.source[p.location]
 
 		if c != uint8('-') {
+			fmt.Println("FINISHED LIST WITH", string(c), c, p.source[:p.location])
 			return list
 		}
 
 		p.Next()
 		list.AddChild(UnorderedListItemNode{p.parseListItem()})
-		p.Next()
 	}
 
 	return list
@@ -189,6 +189,7 @@ func (p *Parser) parseComposite() CompositeStringNode {
 		}
 
 		if c == uint8(']') || c == uint8(')') || c == uint8('-') {
+
 			break
 		}
 
