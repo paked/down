@@ -10,7 +10,11 @@ func TestParseHeaders(t *testing.T) {
 }
 
 func TestParseLink(t *testing.T) {
-	sources := []Source{{"[Link](http://google.com)", `<p><a href='http://google.com'>Link</a></p>`}}
+	sources := []Source{{"[Link](http://google.com)", `<p><a href='http://google.com'>Link</a></p>`},
+		{"[*Link*](http://google.com)", `<p><a href='http://google.com'>*Link*</a></p>`},
+		{"[*Link*]", "<p>*Link*]\n</p>"},
+		{"(http://google.com)", "<p>(http://google.com)</p>"},
+		{"[Link](Hello world", "<p>Hello world\n</p>"}}
 	test(sources, "links", t)
 }
 
