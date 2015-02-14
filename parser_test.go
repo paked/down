@@ -36,7 +36,8 @@ func TestParseUnorderedList(t *testing.T) {
 
 func TestParseMixedContent(t *testing.T) {
 	sources := []Source{{"#Hello\nThis is text!", "<h1>Hello</h1>\n<p>This is text!</p>"},
-		{"This is text\n#Rhis is a title", "<p>This is text</p>\n<h1>Rhis is a title</h1>"}}
+		{"This is text\n#Rhis is a title", "<p>This is text</p>\n<h1>Rhis is a title</h1>"},
+		{"Hello\n- List\n- Item", "<p>Hello</p>\n<ul><li>List</li><li>Item</li></ul>"}}
 	test(sources, "mixed content", t)
 }
 

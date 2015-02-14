@@ -63,6 +63,11 @@ func (p *Parser) parseList() Noder {
 	list := UnorderedListNode{}
 	for !p.End() {
 		c := p.source[p.location]
+		peek, _ := p.Peek()
+		if peek == uint8('-') {
+			p.Next()
+			c = p.source[p.location]
+		}
 
 		if c != uint8('-') {
 			fmt.Println("FINISHED LIST WITH", string(c), c, p.source[:p.location])
@@ -201,9 +206,14 @@ func (p *Parser) parseComposite() CompositeStringNode {
 			composite.AddChild(p.parseLink())
 		default:
 			composite.AddChild(p.parseRaw())
-			if p.source[p.location] == uint8('[') || p.source[p.location] == uint8('#') {
+			fmt.Println("up to", p.source[:p.location])
+			if p.source[p.location] == uint8('[') || p.source[p.location] == uint8('#') || p.source[p.location] == uint8(10) {
 				continue
 			}
+		}
+
+		if c == uint8(10) {
+			break
 		}
 
 		p.Next()
