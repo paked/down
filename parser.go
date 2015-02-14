@@ -93,7 +93,7 @@ func (p *Parser) parseRaw() RawTextNode {
 			break
 		}
 
-		if c == uint8('*') || c == uint8('[') || c == uint8('-') {
+		if c == uint8('*') || c == uint8('[') || c == uint8('-') || c == uint8('#') {
 			break
 		}
 
@@ -174,6 +174,18 @@ func (p *Parser) parseComposite() CompositeStringNode {
 			break
 		}
 
+		if c == uint8(')') || c == uint8('-') {
+			break
+		}
+
+		if c == uint8('#') {
+			fmt.Println("BREAKING")
+			p.location--
+			peek, _ := p.Peek()
+			fmt.Println("PEEK: ", string(peek))
+			break
+		}
+
 		switch c {
 		case uint8('*'):
 			peek, _ := p.Peek()
@@ -189,13 +201,9 @@ func (p *Parser) parseComposite() CompositeStringNode {
 			composite.AddChild(p.parseLink())
 		default:
 			composite.AddChild(p.parseRaw())
-			if p.source[p.location] == uint8('[') {
+			if p.source[p.location] == uint8('[') || p.source[p.location] == uint8('#') {
 				continue
 			}
-		}
-
-		if c == uint8(')') || c == uint8('-') {
-			break
 		}
 
 		p.Next()
