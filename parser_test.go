@@ -14,7 +14,8 @@ func TestParseLink(t *testing.T) {
 		{"[*Link*](http://google.com)", `<p><a href='http://google.com'>*Link*</a></p>`},
 		{"[*Link*]", "<p>*Link*]\n</p>"},
 		{"(http://google.com)", "<p>(http://google.com)</p>"},
-		{"[Link](Hello world", "<p>Hello world\n</p>"}}
+		{"[Link](Hello world", "<p>Hello world\n</p>"},
+		{"This is text [and a link](http://google.com)", "<p>This is text <a href='http://google.com'>and a link</a></p>"}}
 	test(sources, "links", t)
 }
 
@@ -41,7 +42,7 @@ func test(sources []Source, name string, t *testing.T) {
 	for _, s := range sources {
 		p := Parse(s.In)
 		if r := (p == s.Out+"\n"); !r {
-			t.Errorf("Error with %v: %v is not %v", name, p, s.Out)
+			t.Errorf("Error with %v: got %v expected %v", name, p, s.Out)
 		}
 	}
 }
