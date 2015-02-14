@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
@@ -14,19 +13,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var (
-	homePage []byte
-)
-
 func init() {
 	var err error
 
 	rand.Seed(time.Now().UnixNano())
-
-	homePage, err = ioutil.ReadFile("templates/home.html")
-	if err != nil {
-		panic(err)
-	}
 
 	url := os.Getenv("DOWN_MONGODB_URL")
 	if url == "" {
@@ -43,9 +33,10 @@ func init() {
 func main() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", getEditorHandler).Methods("GET")
 	r.HandleFunc("/new_content", postRegisterContentHandler).Methods("POST")
 	r.HandleFunc("/view/{key}", viewContentHandler)
+
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("static/")))
 
 	http.Handle("/", r)
 
@@ -65,18 +56,6 @@ func (c Content) BID() bson.ObjectId {
 
 func (c Content) C() string {
 	return "contents"
-}
-
-func getEditorHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, `<html>
-	<body> 
-		<form action="/new_content" method="POST">
-			<textarea name="content" id="content" cols="30" rows="10"></textarea>
-			<br>
-			<input type="submit" />
-		</form>
-	</body>
-</html>`)
 }
 
 func postRegisterContentHandler(w http.ResponseWriter, r *http.Request) {
