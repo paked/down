@@ -24,4 +24,4 @@ _testmain.go
 *.prof
 
 # Bower stuff
-static/lib/*
+cmd/static/lib/

@@ -1,9 +1,51 @@
 <html>
-	<body> 
-		<form action="/new_content" method="POST">
-			<textarea name="content" id="content" cols="30" rows="10"></textarea>
-			<br>
-			<input type="submit" />
-		</form>
+	<head>
+		<meta charset="utf-8">
+		<title>Downline</title>
+		<link rel="stylesheet" href="/lib/skeleton/css/normalize.css">
+		<link rel="stylesheet" href="/lib/skeleton/css/skeleton.css">
+		<link rel="stylesheet" href="/style.css">
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="u-full-width center">
+					<h1 class="center">Downline - down to earth markup</h1>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="eight columns offset-by-two">
+					<form action="/new_content" method="POST" class="center">
+						<textarea name="content" id="content" cols="30" rows="10" class="u-full-width"></textarea>
+						<br>
+						<input class="button-primary" type="submit" value="Go"/>
+					</form>		
+				</div>
+
+				<div class="two columns">
+					
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="u-full-width center">
+					<h2>Why Downline?</h2>
+					<p>Downline implements a strict subset of the Markdown syntax designed to reduce ambiguity, improve readability and speed up parse time.</p>
+				</div>
+			</div>
+
+			<div class="row center">
+				<div class="six columns">
+					<h3>Speed</h3>
+				</div>
+
+				<div classs="six columns">
+					<h3>Consistency</h3>
+				</div>
+			</div>
+		</div>
+
 	</body>
 </html>
