@@ -48,7 +48,6 @@ func main() {
 type Content struct {
 	ID   bson.ObjectId `bson:"_id"`
 	Down string        `bson: "down"`
-	Key  string        `bson: "key"`
 }
 
 func (c Content) BID() bson.ObjectId {
@@ -60,17 +59,18 @@ func (c Content) C() string {
 }
 
 func postRegisterContentHandler(w http.ResponseWriter, r *http.Request) {
-	content := Content{bson.NewObjectId(), r.FormValue("content"), randomString(64)}
+	content := Content{bson.NewObjectId(), r.FormValue("content")}
+
 	models.Persist(content)
 
-	http.Redirect(w, r, fmt.Sprintf("/view/%v", content.Key), http.StatusFound)
+	http.Redirect(w, r, fmt.Sprintf("/view/%x", string(content.ID)), http.StatusFound)
 }
 
 func viewContentHandler(w http.ResponseWriter, r *http.Request) {
 	var c Content
-	key := mux.Vars(r)["key"]
+	id := mux.Vars(r)["key"]
 
-	models.Restore(&c, bson.M{"key": key})
+	models.RestoreByID(&c, bson.ObjectIdHex(id))
 
 	fmt.Println(c.Down)
 	t, err := template.ParseFiles("templates/view.html")
