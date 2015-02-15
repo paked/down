@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"math/rand"
 	"net/http"
 	"os"
@@ -72,7 +73,12 @@ func viewContentHandler(w http.ResponseWriter, r *http.Request) {
 	models.Restore(&c, bson.M{"key": key})
 
 	fmt.Println(c.Down)
-	fmt.Fprintf(w, "<html><body>%v</body></html>", down.Parse(c.Down))
+	t, err := template.ParseFiles("templates/view.html")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	t.Execute(w, template.HTML(down.Parse(c.Down)))
 }
 
 // Random key generation
