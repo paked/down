@@ -80,15 +80,3 @@ func viewContentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	t.Execute(w, template.HTML(down.Parse(c.Down)))
 }
-
-// Random key generation
-func randomString(length int) string {
-	bytes := []byte("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	var end []byte
-	for i := 0; i < length; i++ {
-		r := rand.Intn(len(bytes))
-		end = append(end, bytes[r])
-	}
-
-	return string(end)
-}
