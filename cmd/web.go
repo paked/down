@@ -46,8 +46,9 @@ func main() {
 }
 
 type Content struct {
-	ID   bson.ObjectId `bson:"_id"`
-	Down string        `bson: "down"`
+	ID    bson.ObjectId `bson:"_id"`
+	Down  string        `bson:"down"`
+	Title string        `bson:"title"`
 }
 
 func (c Content) BID() bson.ObjectId {
@@ -58,8 +59,13 @@ func (c Content) C() string {
 	return "contents"
 }
 
+type Page struct {
+	Content template.HTML
+	Title   string
+}
+
 func postRegisterContentHandler(w http.ResponseWriter, r *http.Request) {
-	content := Content{bson.NewObjectId(), r.FormValue("content")}
+	content := Content{bson.NewObjectId(), r.FormValue("content"), r.FormValue("title")}
 
 	models.Persist(content)
 
@@ -78,5 +84,6 @@ func viewContentHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	t.Execute(w, template.HTML(down.Parse(c.Down)))
+
+	t.Execute(w, Page{template.HTML(down.Parse(c.Down)), c.Title})
 }
