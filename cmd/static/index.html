@@ -14,21 +14,26 @@
 					<h1 class="center">Downline - down to earth markup</h1>
 				</div>
 			</div>
+			
+			<form action="/new_content" method="POST" class="center">
+				<div class="row">
+					<div class="six columns">
+							<label for="title">Title</label>
+							<input type="text" placeholder="title" class="u-full-width" id="title" name="title" palceholder="title"/>
+					</div>
 
-			<div class="row">
-				<div class="eight columns offset-by-two">
-					<form action="/new_content" method="POST" class="center">
-						<label for="title">Title</label>
-						<input type="text" id="title" name="title" palceholder="title">
+					<div class="six columns">
+							<label for="by">By</label>
+							<input type="text" class="u-full-width" id="by" name="by" palceholder="by" placeholder="author"/>
+					</div>
+				</div>
+				<div class="row">
 						<label for="content">Content</label>
 						<textarea name="content" id="content" cols="30" rows="10" class="u-full-width"></textarea>
-						<label for="by">By</label>
-						<input type="text" id="by" name="by" palceholder="by">
 						<br>
 
 						<input class="button-primary" type="submit" value="Go"/>
-					</form>		
-				</div>
+				</form>		
 
 				<div class="two columns">
 					
