@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"html/template"
 	"math/rand"
@@ -12,6 +13,10 @@ import (
 	"github.com/paked/down"
 	"github.com/paked/models"
 	"gopkg.in/mgo.v2/bson"
+)
+
+var (
+	port = flag.String("port", ":8080", "The port you want to listen on!")
 )
 
 func init() {
@@ -32,6 +37,7 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
 	r := mux.NewRouter()
 
 	r.HandleFunc("/new_content", postRegisterContentHandler).Methods("POST")
@@ -41,8 +47,8 @@ func main() {
 
 	http.Handle("/", r)
 
-	fmt.Println("Listening on :8080...")
-	fmt.Println(http.ListenAndServe(":8080", nil))
+	fmt.Printf("Listening on %v...", *port)
+	fmt.Println(http.ListenAndServe(*port, nil))
 }
 
 type Content struct {
