@@ -10,7 +10,7 @@
 //		bold 				::= "*"<composite_string>"*"
 //		italics 			::= "**"<composite_string>"**"
 //
-//		header 		::= headerOne | header_two | header_three | header_four | header_five | header_six
+//		header 		::= <headerOne> | <header_two> | <header_three> | <header_four> | <header_five> | <header_six>
 //		header_one 	::= "#" <composite_string>
 //		headerTwo 	::= "##" <composite_string>
 //		headerThree ::= "###" <composite_string>
@@ -18,7 +18,7 @@
 //		headerFive 	::= "#####" <composite_string>
 //		headerSix 	::= "######" <composite_string>
 //
-//		list ::= (<unordered_list_item>+ | ordered_list_item+)
-// 		unordered_list_item ::= ("* " <list>)
-// 		orderered_list_item ::= (/d+ ". " <list>)
+//		list ::= (<unordered_list_item>+ | <ordered_list_item>+)
+// 		unordered_list_item ::= ("* " (<list> | <composite_string>))
+// 		orderered_list_item ::= (/d+ ". " (<list> | <composite_string>))
 package down
