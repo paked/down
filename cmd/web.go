@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"html/template"
 	"math/rand"
@@ -12,6 +13,10 @@ import (
 	"github.com/paked/down"
 	"github.com/paked/models"
 	"gopkg.in/mgo.v2/bson"
+)
+
+var (
+	port = flag.String("port", ":8080", "The port you want to listen on!")
 )
 
 func init() {
@@ -32,6 +37,7 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
 	r := mux.NewRouter()
 
 	r.HandleFunc("/new_content", postRegisterContentHandler).Methods("POST")
@@ -41,14 +47,15 @@ func main() {
 
 	http.Handle("/", r)
 
-	fmt.Println("Listening on :8080...")
-	fmt.Println(http.ListenAndServe(":8080", nil))
+	fmt.Printf("Listening on %v...", *port)
+	fmt.Println(http.ListenAndServe(*port, nil))
 }
 
 type Content struct {
-	ID    bson.ObjectId `bson:"_id"`
-	Down  string        `bson:"down"`
-	Title string        `bson:"title"`
+	ID     bson.ObjectId `bson:"_id"`
+	Down   string        `bson:"down"`
+	Title  string        `bson:"title"`
+	Author string        `bson:"author"`
 }
 
 func (c Content) BID() bson.ObjectId {
@@ -62,10 +69,11 @@ func (c Content) C() string {
 type Page struct {
 	Content template.HTML
 	Title   string
+	Author  string
 }
 
 func postRegisterContentHandler(w http.ResponseWriter, r *http.Request) {
-	content := Content{bson.NewObjectId(), r.FormValue("content"), r.FormValue("title")}
+	content := Content{bson.NewObjectId(), r.FormValue("content"), r.FormValue("title"), r.FormValue("by")}
 
 	models.Persist(content)
 
@@ -85,5 +93,5 @@ func viewContentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t.Execute(w, Page{template.HTML(down.Parse(c.Down)), c.Title})
+	t.Execute(w, Page{template.HTML(down.Parse(c.Down)), c.Title, c.Author})
 }
