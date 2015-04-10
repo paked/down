@@ -12,7 +12,7 @@ func Lex(s string) ([]Token, error) {
 	l := lexer{
 		location: 0,
 		source:   s,
-		finders:  []FindFunc{HeaderFinder},
+		finders:  []FindFunc{HeaderFinder, TextFinder},
 	}
 
 	return l.lex()
@@ -22,10 +22,33 @@ type lexer struct {
 	location int
 	source   string
 	finders  []FindFunc
+	tokens   []Token
 }
 
 func (l *lexer) lex() ([]Token, error) {
-	return HeaderFinder(l, l.source)
+	for !l.End() {
+		for _, f := range l.finders {
+			if l.try(f) {
+				break
+			}
+		}
+	}
+
+	return l.tokens, nil
+}
+
+func (l *lexer) try(f FindFunc) bool {
+	old := l.location
+	ts, err := f(l, l.source)
+
+	if err != nil {
+		l.location = old
+		return false
+	}
+
+	l.tokens = append(l.tokens, ts...)
+
+	return true
 }
 
 func (l *lexer) End() bool {
@@ -71,6 +94,24 @@ const (
 	HeaderEndType
 )
 
+func TextFinder(l *lexer, s string) ([]Token, error) {
+	var tokens []Token
+	var content string
+	for !l.End() {
+		c := l.Peek()
+		if c == '\n' {
+			break
+		}
+
+		content += string(c)
+		l.Next()
+	}
+
+	text := Token{typ: TextType, val: content}
+	tokens = append(tokens, text)
+	return tokens, nil
+}
+
 func HeaderFinder(l *lexer, s string) ([]Token, error) {
 	var tokens []Token
 	if l.Peek() != '#' {
@@ -96,20 +137,11 @@ func HeaderFinder(l *lexer, s string) ([]Token, error) {
 		t.typ = HeaderTwoType
 	}
 	tokens = append(tokens, t)
-
-	var content string
-	for !l.End() {
-		c := l.Peek()
-		if c == '\n' {
-			break
-		}
-
-		content += string(c)
-		l.Next()
+	texts, err := TextFinder(l, s)
+	if err != nil {
+		return tokens, err
 	}
-
-	text := Token{typ: TextType, val: content}
-	tokens = append(tokens, text)
+	tokens = append(tokens, texts...)
 
 	l.Next()
 	end := Token{typ: HeaderEndType, val: ""}

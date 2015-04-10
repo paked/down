@@ -6,5 +6,5 @@ import (
 )
 
 func TestLex(t *testing.T) {
-	fmt.Println(Lex("###Hello\n"))
+	fmt.Println(Lex("###Hello\nHey#wut"))
 }
