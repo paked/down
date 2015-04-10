@@ -1,9 +1,10 @@
 package down
 
 import (
-	"testing"
+//"testing"
 )
 
+/*
 func TestParseHeaders(t *testing.T) {
 	sources := []Source{{"#Hello", "<h1>Hello</h1>"}, {"##Hello", "<h2>Hello</h2>"}, {"####Hello", "<h4>Hello</h4>"}}
 	test(sources, "headers", t)
@@ -52,4 +53,4 @@ func test(sources []Source, name string, t *testing.T) {
 			t.Errorf("Error with %v: got %v expected %v", name, p, s.Out)
 		}
 	}
-}
+}*/
