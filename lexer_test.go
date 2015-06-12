@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
-func TestLex(t *testing.T) {
-	fmt.Println(Lex("###Hello\nHey#wut"))
+func TestHeaders(t *testing.T) {
+	fmt.Println("testing heraderz..")
+	ts := Lex("#Hello\nHow are you today\n**Hello**\n*Hi* **drugs**\n")
+	fmt.Println(ts)
 }
