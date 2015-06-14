@@ -31,6 +31,8 @@ const (
 	ItalicEndToken      string = "Italics End"
 	ListStartToken      string = "List Start"
 	ListEndToken        string = "List end"
+	ItemStartToken      string = "Item Start"
+	ItemEndToken        string = "Item End"
 )
 
 type Lexer struct {
@@ -45,6 +47,11 @@ func (l *Lexer) Lex() []Token {
 		var err error
 
 		if ts, err = l.try(l.titles, l.newline); err == nil {
+			tokens = append(tokens, ts...)
+			continue
+		}
+
+		if ts, err = l.try(l.list, l.newline); err == nil {
 			tokens = append(tokens, ts...)
 			continue
 		}
@@ -78,6 +85,39 @@ func (l *Lexer) try(fns ...func() ([]Token, error)) ([]Token, error) {
 		tokens = append(tokens, ts...)
 
 	}
+
+	return tokens, nil
+}
+
+func (l *Lexer) list() ([]Token, error) {
+	fmt.Println("at list")
+	var tokens []Token
+
+	tokens = append(tokens, Token{typ: ListStartToken})
+	for !l.End() {
+		if !l.match("* ") {
+			break
+		}
+
+		l.Next()
+		l.Next()
+
+		ts, err := l.text()
+		if err != nil {
+			return tokens, err
+		}
+
+		tokens = append(tokens, Token{typ: ItemStartToken})
+		tokens = append(tokens, ts...)
+		tokens = append(tokens, Token{typ: ItemEndToken})
+
+	}
+
+	if len(tokens) == 1 || l.End() {
+		return tokens, errors.New("no list or tat end")
+	}
+
+	tokens = append(tokens, Token{typ: ListEndToken})
 
 	return tokens, nil
 }
@@ -307,5 +347,13 @@ type Token struct {
 }
 
 func (t Token) String() string {
-	return t.typ + ` "` + t.val + `",`
+	s := t.typ
+
+	if t.val != "" {
+		s += ` "` + t.val + `"`
+	}
+
+	s += ","
+
+	return s
 }

@@ -7,6 +7,6 @@ import (
 
 func TestHeaders(t *testing.T) {
 	fmt.Println("testing heraderz..")
-	ts := Lex("#Hello\nHow are you today\n**Hello**\n*Hi* **drugs**\n")
+	ts := Lex("* *Hello*\n")
 	fmt.Println(ts)
 }
