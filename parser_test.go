@@ -1,56 +1,32 @@
 package down
 
 import (
-//"testing"
+	"testing"
 )
 
-/*
-func TestParseHeaders(t *testing.T) {
-	sources := []Source{{"#Hello", "<h1>Hello</h1>"}, {"##Hello", "<h2>Hello</h2>"}, {"####Hello", "<h4>Hello</h4>"}}
-	test(sources, "headers", t)
-}
-
-func TestParseLink(t *testing.T) {
-	sources := []Source{{"[Link](http://google.com)", `<p><a href='http://google.com'>Link</a></p>`},
-		{"[*Link*](http://google.com)", `<p><a href='http://google.com'>*Link*</a></p>`},
-		{"[*Link*]", "<p>*Link*]\n</p>"},
-		{"(http://google.com)", "<p>(http://google.com)</p>"},
-		{"[Link](Hello world", "<p>Hello world\n</p>"},
-		{"This is text [and a link](http://google.com)", "<p>This is text <a href='http://google.com'>and a link</a></p>"}}
-	test(sources, "links", t)
-}
-
-func TestParseBold(t *testing.T) {
-	sources := []Source{{"**this is bold text**", "<p><b>this is bold text</b></p>"}}
-	test(sources, "bold", t)
-}
-
-func TestParseItalics(t *testing.T) {
-	sources := []Source{{"*this is italic text*", "<p><i>this is italic text</i></p>"}}
-	test(sources, "italics", t)
-}
-
-func TestParseUnorderedList(t *testing.T) {
-	sources := []Source{{"- One\n- Two", "<ul><li>One</li><li>Two</li></ul>"}}
-	test(sources, "unordered list", t)
-}
-
-func TestParseMixedContent(t *testing.T) {
-	sources := []Source{{"#Hello\nThis is text!", "<h1>Hello</h1>\n<p>This is text!</p>"},
-		{"This is text\n#Rhis is a title", "<p>This is text</p>\n<h1>Rhis is a title</h1>"},
-		{"Hello\n- List\n- Item", "<p>Hello</p>\n<ul><li>List</li><li>Item</li></ul>"}}
-	test(sources, "mixed content", t)
-}
-
-type Source struct {
-	In, Out string
-}
-
-func test(sources []Source, name string, t *testing.T) {
-	for _, s := range sources {
-		p := Parse(s.In)
-		if r := (p == s.Out+"\n"); !r {
-			t.Errorf("Error with %v: got %v expected %v", name, p, s.Out)
-		}
+func TestParser(t *testing.T) {
+	if Convert("#Hello\n") != "<h1>Hello</h1>" {
+		t.Fail()
 	}
-}*/
+
+	if Convert("##Hello\n") != "<h2>Hello</h2>" {
+		t.Fail()
+	}
+
+	if Convert("###Hello\n") != "<h3>Hello</h3>" {
+		t.Fail()
+	}
+
+	if Convert("**Hello**\n") != "<p><strong>Hello</strong></p>" {
+		t.Fail()
+	}
+
+	if Convert("*Hello*\n") != "<p><em>Hello</em></p>" {
+		t.Fail()
+	}
+
+	if Convert("**Hello** *Hello*\n") != "<p><strong>Hello</strong> <em>Hello</em></p>" {
+		t.Fail()
+	}
+
+}

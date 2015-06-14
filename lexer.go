@@ -110,7 +110,6 @@ func (l *Lexer) list() ([]Token, error) {
 		tokens = append(tokens, Token{typ: ItemStartToken})
 		tokens = append(tokens, ts...)
 		tokens = append(tokens, Token{typ: ItemEndToken})
-
 	}
 
 	if len(tokens) == 1 || l.End() {
