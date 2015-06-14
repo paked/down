@@ -93,5 +93,5 @@ func viewContentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t.Execute(w, Page{template.HTML(down.Parse(c.Down)), c.Title, c.Author})
+	t.Execute(w, Page{template.HTML(down.Convert(c.Down)), c.Title, c.Author})
 }
